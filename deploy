@@ -14,7 +14,7 @@ def main(argv):
         path = path + '/'
 
     file_path = path + 'war/WEB-INF/appengine-web.xml'
-    print(file_path)
+    print('Modifying app id to ' + app_id + ' at ' + file_path)
 
     try:
         f = open(file_path, 'r')
