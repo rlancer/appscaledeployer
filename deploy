@@ -4,21 +4,30 @@ import re
 import sys
 import subprocess
 
+
 def main(argv):
     """Takes the root of an application changes the appid and then deploys it to AppScale"""
-    app_id,path=argv[0],argv[1]
+    app_id, path = argv[0], argv[1]
 
-    file_path = 'war/WEB-INF/appengine-web.xml'
+    assert isinstance(path, str)
+    if not path.endswith("/"):
+        path = path + '/'
 
-    f = open(file_path, 'r')
-    xml = re.sub(r'<application>.*</application>', '<application>' + app_id + '</application>', f.read())
-    f.close()
+    file_path = path + 'war/WEB-INF/appengine-web.xml'
+    print(file_path)
 
-    f = open(file_path, 'w')
-    f.write(xml)
-    f.close()
+    try:
+        f = open(file_path, 'r')
+        xml = re.sub(r'<application>.*</application>', '<application>' + app_id + '</application>', f.read())
+        f.close()
 
-    subprocess.call(["ls", "-l"])
+        f = open(file_path, 'w')
+        f.write(xml)
+        f.close()
+
+        subprocess.call(["appscale", "deploy", path])
+    except IOError:
+        print('cannot open', file_path)
 
 
 if __name__ == "__main__":
