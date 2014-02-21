@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+
+import re
+import sys
+import subprocess
+
+def main(argv):
+    """Takes the root of an application changes the appid and then deploys it to AppScale"""
+    app_id,path=argv[0],argv[1]
+
+    file_path = 'war/WEB-INF/appengine-web.xml'
+
+    f = open(file_path, 'r')
+    xml = re.sub(r'<application>.*</application>', '<application>' + app_id + '</application>', f.read())
+    f.close()
+
+    f = open(file_path, 'w')
+    f.write(xml)
+    f.close()
+
+    subprocess.call(["ls", "-l"])
+
+
+if __name__ == "__main__":
+    main(sys.argv[1:])
